@@ -91,11 +91,11 @@ public class methods{
 		student.add();
 	}
 	
-	static void studentLogIn() {
+	static void studentLogIn(String studentNum) {
 		String currentLine;
 		
-		System.out.print("Enter your student number: ");
-		String studentNum = input.nextLine();
+		//System.out.print("Enter your student number: ");
+		//String studentNum = input.nextLine();
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(students));
@@ -108,6 +108,7 @@ public class methods{
 					course = row[2].toUpperCase();
 					System.out.println("You are a " + course + " student.");
 					found = true;
+					Student.logPanel.setVisible(false);
 				}
 			}
 			if(!found) {
