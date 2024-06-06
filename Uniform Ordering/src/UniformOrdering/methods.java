@@ -1,15 +1,24 @@
 package UniformOrdering;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class methods{
 	
-	static String students = "C:\\Users\\BOSS\\Desktop\\Uniform Ordering\\students.csv";
+	static String students = "students.csv";
 	static Scanner input = new Scanner(System.in);
 	
 	public static String course = "";
-	public static String uniform ="C:\\Users\\BOSS\\Desktop\\Uniform Ordering\\uniform stocks\\";
+	public static String uniform ="uniform stocks\\";
 	public static boolean found = false;
 	//printing list 
 	static void printStudentList() {
@@ -107,8 +116,15 @@ public class methods{
 					System.out.println("Hi, " + row[1]);
 					course = row[2].toUpperCase();
 					System.out.println("You are a " + course + " student.");
+					
 					found = true;
 					Student.logPanel.setVisible(false);
+					Student.studentName.setText  ("Name       : "+row[1]);
+					Student.studentNum.setText   ("Student No  : "+row[0]);
+					Student.studentCourse.setText("Course         : "+row[2]);
+					Student.sidePanel.add(Student.infoPanel, BorderLayout.NORTH);
+					Student.frame.add(Student.sidePanel, BorderLayout.WEST);
+					menu();
 				}
 			}
 			if(!found) {
@@ -125,7 +141,7 @@ public class methods{
 	}
 	
 	static void printList(String fileName) {
-		String path ="C:\\Users\\BOSS\\Desktop\\Uniform Ordering\\uniform stocks\\" + fileName;
+		String path ="uniform stocks\\" + fileName;
 		
 		try {
 			
@@ -192,6 +208,98 @@ public class methods{
 	
 	static void order() {
 	
+	}
+	
+	static void menu() {
+		//menu 
+		Student.backPanel = new JPanel();
+		Student.check = new JButton("Check Available Sizes");
+		Student.placeOrder = new JButton("Place an Order");
+		Student.orderStatus = new JButton("Order Status");
+				
+		Student.check.addActionListener(e -> sizes());
+				
+		Student.menuPanel = new JPanel();
+		Student.menuPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+		Student.menuPanel.setPreferredSize(new Dimension(100,100));
+		Student.menuPanel.setBackground(Color.gray);
+		Student.menuPanel.add(Student.check);
+		Student.menuPanel.add(Student.placeOrder);
+		Student.menuPanel.add(Student.orderStatus);
+				
+		Student.menuHead = new JPanel();
+		Student.menuHead.setLayout(new BorderLayout());
+		Student.menuHead.setPreferredSize(new Dimension(100,35));
+		Student.menuHead.setBackground(Color.gray);
+		Student.main.setLayout(new BorderLayout(5,5));
+		Student.main.setBackground(Color.white);
+		Student.main.add(Student.menuPanel, BorderLayout.CENTER);
+		Student.main.add(Student.menuHead, BorderLayout.NORTH);
+		
+		JLabel headTitle = new JLabel("Menu");
+		
+		headTitle.setFont(new Font("Roboto",Font.BOLD,15));
+		headTitle.setForeground(Color.black);
+		headTitle.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		Student.menuHead.add(headTitle, BorderLayout.CENTER);
+		Student.menuHead.add(Student.backPanel, BorderLayout.EAST);
+		Student.currentWindow = "menu";
+		
+	
+	}
+	
+	
+	public static String[][] readCSV(String filePath) throws IOException {
+        List<String[]> data = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                data.add(fields);
+            }
+        }
+        if (data.isEmpty()) {
+            return null;
+        }
+        return data.toArray(new String[0][]);
+    }
+	
+	public static void sizes() {
+		fileSearch();
+		try {
+            //String filePath = "path_to_your_csv_file.csv"; // Specify the path to your CSV file
+            String[][] data = readCSV(uniform);
+            if (data != null) {
+                String[] columnNames = data[0]; // Assuming first row is the header
+                String[][] tableData = new String[data.length - 1][];
+                System.arraycopy(data, 1, tableData, 0, data.length - 1);
+                JTable table = new JTable(tableData, columnNames);
+                JScrollPane scrollPane = new JScrollPane(table);
+                Student.menuPanel.setVisible(false);
+                Student.tablePanel.add(scrollPane, BorderLayout.CENTER);
+                Student.main.add(Student.tablePanel);
+                Student.currentWindow = "check";
+                back();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+	}
+	
+	static void back() {
+		JButton back = new JButton("back");
+		back.addActionListener(e -> back());
+		
+		Student.backPanel.setBackground(Color.gray);
+		Student.backPanel.add(back);
+		
+		if(Student.currentWindow.equals("menu")) {
+			Student.backPanel.setVisible(false);
+		}else if(Student.currentWindow.equals("check")) {
+			Student.backPanel.setVisible(true);
+			menu();
+		}
 	}
 	
 	

@@ -6,7 +6,7 @@ public class addToList {
 	
 	String studentNo, name, courseCode;
 	
-	String students = "C:\\Users\\BOSS\\Desktop\\Uniform Ordering\\students.csv";
+	String students = "students.csv";
 	
 	//constructors
 	addToList(String studentNo, String name, String courseCode){
