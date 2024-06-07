@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class methods{
 	
-	static String students = "students.csv";
+	static String students = "StudentsSheet1.csv";
 	static Scanner input = new Scanner(System.in);
 	
 	public static String course = "";
@@ -30,7 +30,8 @@ public class methods{
 			while((line = reader.readLine()) != null) {
 				String row [] = line.split(",");
 				for(String index : row) {
-					System.out.printf("%-15s", index);
+					System.out.printf("%-30s", index);
+					System.out.print(" | ");
 				}
 				System.out.println();
 				
@@ -86,7 +87,7 @@ public class methods{
 	}
 	
 	static void addToList() {
-		String studentNo = "", name = "", courseCode = "";
+		String studentNo = "", name = "", courseCode = "", discount = "";
 		
 		System.out.print("Enter Student No   : ");
 		studentNo = input.nextLine();
@@ -94,9 +95,11 @@ public class methods{
 		name = input.nextLine();
 		System.out.print("Enter Course Code  : ");
 		courseCode = input.nextLine();
+		System.out.print("Enter Course Code  : ");
+		discount = input.nextLine();
 		
 		
-		addToList student = new addToList(studentNo, name, courseCode);
+		addToList student = new addToList(studentNo, name, courseCode,discount);
 		student.add();
 	}
 	
@@ -167,19 +170,20 @@ public class methods{
 		}
 	}
 	
-	static void printOngoingList(String fileName) {
-		String path ="orders\\" + fileName;
+	static void printOngoingList() {
+		String path ="orders\\Ongoing Orders.csv";
 		
 		try {
 			
 			BufferedReader reader = new BufferedReader(new FileReader(path));
 			String line = "";
-			String title = fileName.substring(0, fileName.lastIndexOf('.'));
-			System.out.println("\n"+ title +": \n");
+			//String title = fileName.substring(0, fileName.lastIndexOf('.'));
+			//System.out.println("\n"+ title +": \n");
+			System.out.println("Ongoing Orders List\n\n");
 			while((line = reader.readLine()) != null) {
 				String row [] = line.split(",");
 				for(String index : row) {
-					System.out.printf("%-15s", index);
+					System.out.printf("%-30s", index);
 					System.out.print(" | ");
 				}
 				System.out.println();
@@ -188,6 +192,49 @@ public class methods{
 			reader.close();
 		} catch (IOException e) {
 				e.printStackTrace();
+		}
+	}
+	static void completeAnOrder() {
+		System.out.print("\nWhich order you want to archive: ");
+		int deleteLine = input.nextInt()+1;
+		
+		String tempFile = "temp.csv";
+		File oldFile = new File("orders\\Ongoing Orders.csv");
+		File newFile = new File(tempFile);
+		
+		int line = 0;
+		String currentLine;
+		
+		try {
+			//writers
+			BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile,true));
+			PrintWriter writer = new PrintWriter(bw);
+			//reader
+			BufferedReader reader = new BufferedReader(new FileReader("orders\\Ongoing Orders.csv"));
+			
+			while((currentLine = reader.readLine()) != null) {
+				line++;
+				if(deleteLine != line) {
+					writer.println(currentLine);
+				}else {
+					int deletedLine = line - 1;
+					System.out.println("\nLine " + deletedLine + " has been sucessfully archived.");
+				}
+			}
+			
+			writer.flush();
+			writer.close();
+			bw.close();
+			reader.close();
+			
+			//delete old file and rewrite it
+			oldFile.delete();
+			File dump = new File("orders\\Ongoing Orders.csv");
+			newFile.renameTo(dump);
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	

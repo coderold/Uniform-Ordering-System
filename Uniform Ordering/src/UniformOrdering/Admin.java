@@ -15,9 +15,16 @@ public class Admin extends methods{
 			if(adminInput == 1) {
 				printStudentList();
 			}else if(adminInput == 2) {
+				addToList();
 				printStudentList();
-			}
-			else {
+			}else if(adminInput == 3) {
+				deleteFromList();
+			}else if(adminInput == 4) {
+				printOngoingList();
+			}else if(adminInput == 5) {
+				printOngoingList();
+				completeAnOrder();
+			}else {
 				break;
 			}
 		}
