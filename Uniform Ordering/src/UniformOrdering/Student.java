@@ -7,17 +7,20 @@ import javax.swing.*;
 
 public class Student extends methods{
 
-	public static JTextField tf;
+	public static JTextField tf, quantity;
 	public static JFrame frame;
-	public static JPanel logPanel,infoPanel, menuPanel, menuHead, tablePanel, backPanel;
-	public static JLabel studentName, studentNum ,studentCourse;
-	public static JButton check, placeOrder, orderStatus;
-	public static JTable sizes;
+	public static JPanel logPanel,infoPanel, menuPanel, menuHead, tablePanel,
+	petablePanel, backPanel, orderPanel, statusPanel;
 	
+	public static JLabel studentName, studentNum ,studentCourse,headTitle;
+	public static JButton check, placeOrder, orderStatus, back, checkOut, addQ;
+	public static JTable sizes;
+	public static JComboBox typeBox, size;
 	//main panels
 	public static JPanel headpanel, main, sidePanel, footer;
 	
 	public static String currentWindow;
+	public static String type[];
 	
 	public static void main(String[] args){
 		
@@ -89,12 +92,53 @@ public class Student extends methods{
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		infoPanel.setBackground(Color.gray);
 		
+		//menu 
+		check = new JButton("Check Available Sizes");
+		placeOrder = new JButton("Place an Order");
+		orderStatus = new JButton("Order Status");
 		
-		
-		
-		
-		//table
+		//check table
+		check.addActionListener(e -> sizes());
 		tablePanel = new JPanel();
+		tablePanel.setVisible(false);
+		petablePanel = new JPanel();
+		petablePanel.setVisible(false);
+		
+		//order
+		placeOrder.addActionListener(e-> order());
+		orderPanel = new JPanel();
+		orderPanel.setVisible(false);
+		
+		//order status
+		orderStatus.addActionListener(e-> order());
+		statusPanel = new JPanel();
+		statusPanel.setVisible(false);
+		
+		menuPanel = new JPanel();
+		menuPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+		menuPanel.setPreferredSize(new Dimension(100,100));
+		menuPanel.setBackground(Color.gray);
+		menuPanel.add(check);
+		menuPanel.add(placeOrder);
+		menuPanel.add(orderStatus);
+		
+		menuHead = new JPanel();
+		menuHead.setLayout(new BorderLayout());
+		menuHead.setPreferredSize(new Dimension(100,35));
+		menuHead.setBackground(Color.gray);
+		
+		headTitle = new JLabel("Menu");
+		back = new JButton("back");
+		back.addActionListener(e -> back());
+		backPanel = new JPanel();
+		backPanel.setBackground(Color.gray);
+		backPanel.add(back);
+		headTitle.setFont(new Font("Roboto",Font.BOLD,15));
+		headTitle.setForeground(Color.black);
+		headTitle.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		menuHead.add(headTitle, BorderLayout.CENTER);
+		menuHead.add(backPanel, BorderLayout.EAST);
+		backPanel.setVisible(false);
 		
 		
 		
@@ -104,7 +148,7 @@ public class Student extends methods{
 		frame.setTitle("Student Ordering System");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		frame.setSize(700,500);
+		frame.setSize(750,500);
 		frame.setLayout(new BorderLayout(5,5));
 		
 		//panels
@@ -121,10 +165,10 @@ public class Student extends methods{
 		
 		
 		
-		//System.out.println("Welcome Student!\n");
-		//studentLogIn();
-		/**while(found) {
-			System.out.println("\n1.Check Uniform Stocks.\n2.Place an Order.\n3.Order Status");
+		/**System.out.println("Welcome Student!\n");
+		studentLogIn();
+		while(found) {
+			System.out.println("\n1.Check Uniform Stocks.\n2.Place an Order.\n3.Order Status.\n4.Back.");
 			int userInput = input.nextInt();
 			
 			if(userInput == 1) {
@@ -164,7 +208,6 @@ public class Student extends methods{
 				//create place an order method that will ask the user their order
 				//place it on ongoing order csv
 				
-				userInput = input.nextInt();
 				System.out.println("Placing an order:\n");
 				if(course.equals("HM")) {
 					System.out.println("\n1.Daily Uniform\n2.Food & Beverages\n3.Kitchen\n4.PE & NSTP");
@@ -200,6 +243,10 @@ public class Student extends methods{
 				//check ongoing order csv and find user's student id
 				//if found, print ongoing status
 				//if not, print you have no orders at the moment.
+			}else if(userInput == 4) {
+				//back
+			}else {
+				System.out.println("Invalid Input.");
 			}
 			
 		}**/
