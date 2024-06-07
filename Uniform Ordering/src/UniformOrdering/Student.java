@@ -10,7 +10,7 @@ public class Student extends methods{
 	public static JTextField tf, quantity;
 	public static JFrame frame;
 	public static JPanel logPanel,infoPanel, menuPanel, menuHead, tablePanel,
-	petablePanel, backPanel, orderPanel, statusPanel;
+	petablePanel, backPanel, orderPanel, statusPanel, ongoing, onHead, onContent;
 	
 	public static JLabel studentName, studentNum ,studentCourse,headTitle;
 	public static JButton check, placeOrder, orderStatus, back, checkOut, addQ;
@@ -110,9 +110,22 @@ public class Student extends methods{
 		orderPanel.setVisible(false);
 		
 		//order status
-		orderStatus.addActionListener(e-> order());
+		ongoing = new JPanel();
+		onHead = new JPanel();
+		onContent = new JPanel();
+		orderStatus.addActionListener(e-> orderStatus());
 		statusPanel = new JPanel();
 		statusPanel.setVisible(false);
+		statusPanel.setLayout(new BorderLayout());
+		
+		ongoing.setLayout(new BorderLayout());
+		ongoing.setPreferredSize(new Dimension(100,100));
+		JLabel onlabel = new JLabel("Ongoing Orders");
+		onHead.add(onlabel);
+		onHead.setBackground(Color.gray);
+		ongoing.add(onHead, BorderLayout.NORTH);
+		ongoing.add(onContent, BorderLayout.CENTER);
+		statusPanel.add(ongoing, BorderLayout.CENTER);
 		
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));

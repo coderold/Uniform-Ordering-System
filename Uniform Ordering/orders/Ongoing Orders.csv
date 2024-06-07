@@ -1,1 +1,4 @@
-Student No.,Name,Order,Quantity
+Student No.,Name,Order,Size,Quantity
+1,Matthew,GRAY BLOUSE,XXL,1
+1,Matthew,GRAY POLO,SMALL,1
+2,Daniel,WHITE POLO,SMALL,1

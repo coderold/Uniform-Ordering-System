@@ -17,6 +17,9 @@ public class methods{
 	public static String pe ="uniform stocks\\PE & NSTP.csv";
 	public static String studentDailyUniform;
 	public static boolean found = false, run = true;
+	
+	private static String name, studentNo;
+	
 	//printing list 
 	static void printStudentList() {
 		try {
@@ -111,9 +114,7 @@ public class methods{
 				String row [] = currentLine.split(",");
 				if(row[0].equals(studentNum)) {
 					System.out.println("Successfully logged in...\n\n");
-					System.out.println("Hi, " + row[1]);
 					course = row[2].toUpperCase();
-					System.out.println("You are a " + course + " student.");
 					
 					found = true;
 					Student.logPanel.setVisible(false);
@@ -122,6 +123,10 @@ public class methods{
 					Student.studentCourse.setText("Course         : "+row[2]);
 					Student.sidePanel.add(Student.infoPanel, BorderLayout.NORTH);
 					Student.frame.add(Student.sidePanel, BorderLayout.WEST);
+					
+					name = row[1];
+					studentNo = row[0];
+					
 					menu();
 				}
 			}
@@ -161,6 +166,31 @@ public class methods{
 				e.printStackTrace();
 		}
 	}
+	
+	static void printOngoingList(String fileName) {
+		String path ="orders\\" + fileName;
+		
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			String line = "";
+			String title = fileName.substring(0, fileName.lastIndexOf('.'));
+			System.out.println("\n"+ title +": \n");
+			while((line = reader.readLine()) != null) {
+				String row [] = line.split(",");
+				for(String index : row) {
+					System.out.printf("%-15s", index);
+					System.out.print(" | ");
+				}
+				System.out.println();
+				
+			}
+			reader.close();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+	}
+	
 	
 	static void fileSearch() {
 		
@@ -366,7 +396,7 @@ public class methods{
 			Student.orderPanel.setVisible(false);
 			Student.menuPanel.setVisible(true);
 			Student.currentWindow = "menu";
-		}else if(Student.currentWindow.equals("order")) {
+		}else if(Student.currentWindow.equals("status")) {
 			Student.backPanel.setVisible(false);
 			Student.statusPanel.setVisible(false);
 			Student.menuPanel.setVisible(true);
@@ -380,9 +410,136 @@ public class methods{
                 .toArray(String[]::new);
     }
 	
+	private static JFrame popframe = new JFrame("Confirm CheckOut");
 	public static void checkOut() {
+		
+		JPanel textPanel = new JPanel();
+		JPanel buttonPanel = new JPanel();
+		popframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		popframe.setVisible(true);
+		popframe.setSize(300, 200);
+		popframe.setLayout(new BorderLayout());
+		
+		JLabel confirmText = new JLabel();
+		confirmText.setText("Are you sure to check out the Following:");
+		
+		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.PAGE_AXIS));
+		textPanel.add(confirmText);
+		textPanel.add(new JLabel("Uniform     :   " + Student.typeBox.getSelectedItem()));
+		textPanel.add(new JLabel("Size     	       :   " + Student.size.getSelectedItem()));
+		textPanel.add(new JLabel("Quantity    :   " + Student.quantity.getText()));
+		
+		textPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		textPanel.setBackground(Color.LIGHT_GRAY);
+		
+		JButton confirmButton = new JButton("Confirm");
+		JButton cancelButton = new JButton("Cancel");
+		buttonPanel.add(confirmButton);
+		buttonPanel.add(cancelButton);
+		
+		confirmButton.addActionListener(e -> confirm());
+		cancelButton.addActionListener(e -> cancel());
+		
+		
+		popframe.add(textPanel, BorderLayout.CENTER);
+		popframe.add(buttonPanel, BorderLayout.SOUTH);
 		
 	}
 	
+	static void confirm() {
+		
+		Object uniform, size;
+		String quantity;
+		
+		uniform = Student.typeBox.getSelectedItem();
+		size = Student.size.getSelectedItem();
+		quantity = Student.quantity.getText();
+		
+		
+		try {
+			FileWriter writer = new FileWriter("orders//Ongoing Orders.csv", true);
+			writer.write("\n"+ studentNo + "," + name + "," + uniform + "," + size + "," + quantity);
+			System.out.println("New student added succesfully.\n");
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		popframe.dispose();
+	}
+	
+	static void cancel() {
+		popframe.dispose();
+	}
+	
+	static void orderStatus() {
+		
+		/**Student.menuPanel.setVisible(false);
+		Student.currentWindow = "status";
+		Student.backPanel.setVisible(true);
+        Student.back.addActionListener(e-> back());
+        Student.statusPanel.setVisible(true);
+        Student.ongoing.setVisible(true);
+        
+        JPanel ongoing = new JPanel();
+        ongoing.setLayout(new BorderLayout(5,5));
+        JPanel onHead = new JPanel();
+        JLabel onlabel = new JLabel("Ongoing Orders");
+        onHead.add(onlabel);
+        onHead.setBackground(Color.gray);
+        onHead.setPreferredSize(new Dimension(100,50));
+        ongoing.add(onHead, BorderLayout.NORTH);
+        Student.statusPanel.add(ongoing);
+        Student.main.add(Student.statusPanel);
+        **/
+        //JPanel completed = new JPanel();
+        
+        
+		
+	}
+	
+	static void checkOrderStatus(String studentNum, String file) {
+		String currentLine;
+		
+		if(file.equals("ongoing")) {
+			file = "orders//Ongoing Orders.csv";
+		}else if (file.equals("completed")) {
+			file = "orders//Completed Orders.csv";
+		}
+		
+		
+
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			
+			while((currentLine = reader.readLine()) != null) {
+				String row [] = currentLine.split(",");
+				if(row[0].equals(studentNum)) {
+					
+					found = true;
+					Student.logPanel.setVisible(false);
+					Student.studentName.setText  ("Name       : "+row[1]);
+					Student.studentNum.setText   ("Student No  : "+row[0]);
+					Student.studentCourse.setText("Course         : "+row[2]);
+					Student.sidePanel.add(Student.infoPanel, BorderLayout.NORTH);
+					Student.frame.add(Student.sidePanel, BorderLayout.WEST);
+					
+					name = row[1];
+					studentNo = row[0];
+					
+					menu();
+				}
+			}
+			if(!found) {
+				System.out.println("Student not Found.");
+			}
+			
+			reader.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 }
